@@ -7,8 +7,8 @@ import Backdrop from '../Backdrop/Backdrop';
 class Modal extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
-        // only update component if the value of show has changed (returns true)
-        return nextProps.show !== this.props.show;
+        // only update component if the value of show has changed (returns true) or if children changes (order summary changes to spinner)
+        return nextProps.show !== this.props.show || nextProps.children !== this.props.children;
     }
 
     render() {
