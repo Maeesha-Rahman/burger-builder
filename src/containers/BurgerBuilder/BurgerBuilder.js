@@ -28,6 +28,7 @@ class BurgerBuilder extends Component {
     }
 
     componentDidMount() {
+        // console.log(this.props);
         axios.get('https://react-my-burger-1ef22.firebaseio.com/ingredients.json')
             .then(response => {
                 this.setState({ ingredients: response.data });
@@ -91,32 +92,21 @@ class BurgerBuilder extends Component {
     }
 
     purchaseContinueHandler = () => {
-        this.setState({ loading: true });
-        const order = {
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice,
-            customer: {
-                name: 'Maeesha',
-                address: {
-                    street: 'Test St.',
-                    zipCode: 'l8l5b4',
-                    country: 'Canada'
-                },
-                email: 'test@test.com'
-            },
-            deliveryMethod: 'fastest'
-        }
-        // for firebase to function correctly, we need to add .json at the end or our url or node that we created
-        // second argument is data that gets sent to this path
-        axios.post('/orders.json', order)
-            .then(response => {
-                // once we get response, set purchasing to false so modal closes
-                this.setState({ loading: false, purchasing: false })
-            })
-            .catch(error => {
-                this.setState({ loading: false, purchasing: false })
-            });
 
+        const queryParams = [];
+
+        for (let i in this.state.ingredients) {
+            queryParams.push(encodeURIComponent(i) + '=' + +encodeURIComponent(this.state.ingredients[i]));
+        }
+
+        queryParams.push('price=' + this.state.totalPrice);
+
+        const queryString = queryParams.join('&');
+
+        this.props.history.push({
+            pathname: '/checkout',
+            search: '?' + queryString,
+        });
     }
 
     render() {
